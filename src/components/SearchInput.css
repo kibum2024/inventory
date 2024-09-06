@@ -1,0 +1,133 @@
+.search-input-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.search-input-label {
+  margin-right: 8px;
+  font-size: 14px;
+  font-weight: bold ;
+  width: 100px;
+  color: #666;
+}
+
+.search-input-field {
+  border: 1px solid #ccc;
+  padding: 8px;
+  font-size: 14px;
+}
+
+.search-code-input {
+  width: 80px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.search-name-input {
+  width: 250px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.search-icon-container {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-left: none;
+  cursor: pointer;
+}
+
+.search-icon {
+  color: #666;
+}
+
+.search-popup {
+  position: absolute;
+  top: 0px; 
+  left: 50%;
+  transform: translateX(-50%);
+  width: 500px;
+  height: 600px;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.search-popup-content {
+  padding: 16px;
+}
+
+.search-popup-content h2 {
+  margin-top: 0;
+  font-size: 18px;
+}
+
+.search-popup-content input {
+  width: 350px;
+  padding: 8px;
+  font-size: 14px;
+  margin-right: 10px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+}
+
+
+.search-btn, .search-close-btn {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.search-btn:hover, .search-close-btn:hover {
+  background-color: #0056b3;
+}
+
+.search-popup-scroll {
+  overflow-y: auto;
+  width: 485px;
+  height: 375px;
+}
+
+.search-popup-list {
+  display: flex;
+  width: 450px;
+  height: 25px;
+  line-height: 25px;
+  margin-left: 16px;
+}
+
+.search-popup-no {
+  width: 50px;
+  border: 1px solid #ccc;
+  text-align: center;
+  font-size: 14px;
+}
+
+.search-popup-code {
+  width: 150px;
+  border: 1px solid #ccc;
+  text-align: center;
+  font-size: 14px;
+}
+
+.search-popup-name {
+  width: 300px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.search-popup-name-title {
+  width: 300px;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+.search-close-btn {
+  margin: 10px 16px;
+}

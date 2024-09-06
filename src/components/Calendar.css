@@ -1,0 +1,79 @@
+.calendar {
+  position: relative;
+  width: 185px;
+  margin: 0 auto;
+  text-align: center;
+  border: 1px solid #f0f0f0;
+  padding: 10px;
+}
+
+.calendar-close {
+  position: absolute;
+  right: 10px;
+  top: 5px;
+  cursor: pointer;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 40px;
+  line-height: 40px;
+}
+
+.header button {
+  border: none;
+  background-color: white;
+}
+
+.daysOfWeek, .days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+
+.dayOfWeek, .day {
+  padding: 5px;
+}
+
+.day {
+  background-color: #fff;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.dayOfWeek {
+  font-size: 13px;
+  font-weight: bold;
+}
+.holiday, .weekend {
+  color: red;
+  font-weight: bold;
+}
+
+.empty {
+  visibility: hidden;
+}
+
+.selected {
+  border: none;
+  background-color: rgb(57, 57, 119);
+  border-radius: 50%;
+  color: white;
+}
+
+.today-btn {
+  margin: 2px 0;
+  font-size: 12px;
+  padding: 0px 10px;
+  background-color: #fff;
+  color: #b1a8a8;
+  border: 1px solid #e4dcdc;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.today-btn:hover {
+  background-color: #7c807b;
+}
