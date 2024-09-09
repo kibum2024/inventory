@@ -1,6 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import InputDate from './InputDate';
 import SearchInput from './SearchInput';
+import KbGrid from './KbGrid';
+import Kbbutton from './KbButton';
+import Grid from './Grid';
+import TbGrid from './TbGrid';
+import Test from './Test';
 import './ItemCode.css';
 
 const ItemCode = () => {
@@ -21,8 +26,43 @@ const ItemCode = () => {
                       {code: '00013', name: '홍길동13'},
                       {code: '00014', name: '홍길동14'},
                       {code: '00015', name: '홍길동15'},
-                      {code: '00016', name: '홍길동16'}
+                      {code: '00016', name: '홍길동16'},
+                      {code: '00017', name: '홍길동17'},
+                      {code: '00018', name: '홍길동18'}
                     ];
+
+  const [columnDefs] = useState([
+    // { headerName: 'No', numbering: true, align: 'center'},
+    // { headerName: '선택', checkboxSelection: true, headerCheckboxSelection: true,  align: 'center'},
+    // { headerName: '제조사', field: 'make', sortable: true,  align: 'left',  editable: true, chartype: 'string', search: true},
+    // { headerName: '제품', field: 'model', sortable: true, align: 'left', chartype: 'string', search: true  },
+    // { headerName: '가격', field: 'price', editable: true, align: 'right', separator: true, chartype: 'number', search: true  }
+    { headerName: 'No', numbering: true, width: 50, align: 'center'},
+    { headerName: '선택', checkboxSelection: true, headerCheckboxSelection: true, width: 50, align: 'center'},
+    { headerName: '제조사', field: 'make', sortable: true, width: 150, align: 'left',  editable: true, chartype: 'string', search: true},
+    { headerName: '제품', field: 'model', sortable: true, width: 250, align: 'left', chartype: 'string', search: true  },
+    { headerName: '가격', field: 'price', editable: true, width: 100, align: 'right', separator: true, chartype: 'number', search: true  }
+  ]);
+
+  const [rowData, setRowData] = useState([
+    { make: 'Toyota', model: 'Celica', price: 35000 },
+    { make: 'Ford', model: 'Mondeo', price: 32000 },
+    { make: 'Porsche', model: 'Boxster', price: 72000 },
+    { make: 'Porsche', model: 'Boxster', price: 72000 },
+    { make: 'Porsche', model: 'Boxster', price: 72000 },
+    { make: 'Porsche', model: 'Boxster', price: 72000 },
+    { make: 'Porsche', model: 'Boxster', price: 72000 },
+    { make: 'Porsche', model: 'Boxster', price: 72000 },
+    { make: 'Porsche', model: 'Boxster', price: 72000 },
+    { make: 'Porsche', model: 'Boxster', price: 72000 },
+    { make: 'Porsche', model: 'Boxster', price: 72000 },
+    { make: 'Porsche', model: 'Boxster', price: 72000 },
+    { make: 'Porsche', model: 'Boxster', price: 72000 }
+  ]);
+
+  const handleClick = (buttonType) => {
+    console.log(`${buttonType} 버튼이 클릭되었습니다.`);
+  };
 
   return (
     <div>
@@ -31,21 +71,42 @@ const ItemCode = () => {
       </div>
       <div className='content-wrap'>
         <div className='search-condition'>
+          <div>
+            <h1>버튼</h1>
+            <Kbbutton type="deleteButton"  onClick={() => handleClick('삭제')}/>
+            <Kbbutton type="addButton"  onClick={() => handleClick('추가')}/>
+            <Kbbutton type="updateButton"  onClick={() => handleClick('수정')}/>
+            <Kbbutton type="searchButton" onClick={() => handleClick('검색')} />
+          </div>
+            <h1>input</h1>
           <div className='line01'>
             <InputDate dateProp = {today} />
             <InputDate dateProp = {today} />
           </div>
           <div>
-            <h1>aaa</h1>
-            <InputDate dateProp = {today} />
+            {/* <InputDate dateProp = {today} /> */}
           </div>
           <div>
             <h1>search</h1>
-            <SearchInput itemName = {"담당자"} inputDatas = {director}></SearchInput>
+            <Test></Test>
+            {/* <SearchInput itemName = {"담당자"} inputDatas = {director}></SearchInput>
+            <SearchInput itemName = {"창고"} inputDatas = {director}></SearchInput> */}
           </div>
         </div>
-        <div className='grid'>
+        <h1>Grid1</h1>
+        <div className='grid' style={{marginLeft: '20px', padding: '0px 20px'}}>
+          <KbGrid
+            columnDefsProp = {columnDefs} // 컬럼 정의
+            rowDataProp = {rowData} // 데이터
+            rowSelectionProp = {false} // 여러 행 선택 가능
+            paginationProp = {true} // 페이징 활성화
+            paginationPageSizeProp = {6} // 페이지당 10개 행 표시
+          />
+        </div>
 
+        <h1>Grid2</h1>
+        <div className='grid'>
+          <Grid />
         </div>
       </div>
       <div className='button-wrap'>
