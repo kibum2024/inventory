@@ -1,6 +1,6 @@
-// src/Calendar.js
 import React, { useState } from 'react';
-import './Calendar.css';
+import { IoCaretBack, IoCaretForward, IoClose } from "react-icons/io5";
+import './KbCalendar.css';
 
 // 대한민국 국경일 및 설날과 추석 (2024년 기준)
 const holidays = [
@@ -20,7 +20,7 @@ const holidays = [
   { month: 12, day: 25, name: '크리스마스' }
 ];
 
-const Calendar = ({ onDateDoubleClick }) => {
+const KbCalendar = ({ onDateDoubleClick }) => {
   const today = new Date();
   const [currentDate, setCurrentDate] = useState(today);
 
@@ -65,16 +65,21 @@ const Calendar = ({ onDateDoubleClick }) => {
   const renderDays = () => {
     const days = [];
     for (let i = 0; i < firstDayOfMonth; i++) {
-      days.push(<div key={`empty-${i}`} className="empty"></div>);
+      days.push(<div key={`kb-empty-${i}`} className="kb-empty"></div>);
     }
     for (let day = 1; day <= daysInMonth; day++) {
       const date = new Date(toYear, toMonth, day);
       const isWeekend = date.getDay() === 0 || date.getDay() === 6; // 일요일(0) 또는 토요일(6)
-      const holidayClass = isHoliday(day) ? 'holiday' : '';
-      const weekendClass = isWeekend ? 'weekend' : '';
-      const selectedClass = day === selectedDate ? 'selected' : ''; 
+      const holidayClass = isHoliday(day) ? 'kb-holiday' : '';
+      const weekendClass = isWeekend ? 'kb-weekend' : '';
+      const selectedClass = day === selectedDate ? 'kb-selected' : ''; 
       days.push(
-        <div key={day} className={`day ${holidayClass} ${weekendClass} ${selectedClass}`} onClick={() => handleDateClick(day)} onDoubleClick={() => handleDoubleClick(day)}>
+        <div  key={day} 
+              className={`kb-day ${holidayClass} ${weekendClass} ${selectedClass}`} 
+              onClick={() => handleDateClick(day)} 
+              onDoubleClick={() => handleDoubleClick(day)}
+              style={{ width: '14px', height: '14px', lineHeight: '14px' }}
+        >
           {day}
         </div>
       );
@@ -83,26 +88,26 @@ const Calendar = ({ onDateDoubleClick }) => {
   };
 
   return (
-    <div className="calendar">
-      <div className='calendar-close' onClick={() => handleDoubleClick(selectedDate)} >X</div>
-      <div className="header">
-        <button onClick={handlePrevMonth}>◁</button>
-        <h4>
+    <div className="kb-calendar">
+      <div className='kb-calendar-close' onClick={() => handleDoubleClick(selectedDate)} ><IoClose style={{ width: '16px', height: '16px', lineHeight: '16px' }}/></div>
+      <div className="kb-header">
+        <button onClick={handlePrevMonth}><IoCaretBack style={{ paddingTop: '11px', width: '16px', height: '16px', lineHeight: '16px' }}/></button>
+        <div style={{ fontWeight: 'bold' }}>
           {toYear}년 {toMonth + 1}월
-        </h4>
-        <button onClick={handleNextMonth}>▷</button>
+        </div>
+        <button onClick={handleNextMonth}><IoCaretForward style={{ paddingTop: '11px', width: '16px', height: '16px', lineHeight: '16px' }}/></button>
       </div>
-      <button onClick={handleToday} className="today-btn">오늘</button>
-      <div className="daysOfWeek">
+      <button onClick={handleToday} className="kb-today-btn">오늘</button>
+      <div className="kb-daysOfWeek">
         {daysOfWeek.map((day) => (
-          <div key={day} className="dayOfWeek">
+          <div key={day} className="kb-dayOfWeek" style={{ width: '14px', height: '14px', lineHeight: '14px' }}>
             {day}
           </div>
         ))}
       </div>
-      <div className="days">{renderDays()}</div>
+      <div className="kb-days">{renderDays()}</div>
     </div>
   );
 };
 
-export default Calendar;
+export default KbCalendar;

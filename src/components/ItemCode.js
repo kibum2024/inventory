@@ -1,34 +1,34 @@
 import React, { useState } from 'react';
-import InputDate from './InputDate';
+import KbInputDate from './KbInputDate';
 import SearchInput from './SearchInput';
 import KbGrid from './KbGrid';
 import Kbbutton from './KbButton';
 import Grid from './Grid';
-import TbGrid from './TbGrid';
-import Test from './Test';
+import KbSwitch from './KbSwitch';
+import KbCombo from './KbCombo';
 import './ItemCode.css';
 
 const ItemCode = () => {
   const today = new Date();
   const director =  [ 
-                      {code: '00001', name: '홍길동1'},
-                      {code: '00002', name: '홍길동2'},
-                      {code: '00003', name: '홍길동3'},
-                      {code: '00004', name: '홍길동4'},
-                      {code: '00005', name: '홍길동5'},
-                      {code: '00006', name: '홍길동6'},
-                      {code: '00007', name: '홍길동7'},
-                      {code: '00008', name: '홍길동8'},
-                      {code: '00009', name: '홍길동9'},
-                      {code: '00010', name: '홍길동10'},
-                      {code: '00011', name: '홍길동11'},
-                      {code: '00012', name: '홍길동12'},
-                      {code: '00013', name: '홍길동13'},
-                      {code: '00014', name: '홍길동14'},
-                      {code: '00015', name: '홍길동15'},
-                      {code: '00016', name: '홍길동16'},
-                      {code: '00017', name: '홍길동17'},
-                      {code: '00018', name: '홍길동18'}
+                      {code: '00001', name: '홍길동'},
+                      {code: '00002', name: '김영철'},
+                      {code: '00003', name: '안성준'},
+                      {code: '00004', name: '양무리'},
+                      {code: '00005', name: '공한택'},
+                      {code: '00006', name: '임소율'},
+                      {code: '00007', name: '김유화'},
+                      {code: '00008', name: '이상목'},
+                      {code: '00009', name: '김형준'},
+                      {code: '00010', name: '김다래'},
+                      {code: '00011', name: '김준석'},
+                      {code: '00012', name: '이대호'},
+                      {code: '00013', name: '김주석'},
+                      {code: '00014', name: '염동엽'},
+                      {code: '00015', name: '전준우'},
+                      {code: '00016', name: '윤동희'},
+                      {code: '00017', name: '우동성'},
+                      {code: '00018', name: '김호윤'}
                     ];
 
   const [columnDefs] = useState([
@@ -41,26 +41,39 @@ const ItemCode = () => {
     { headerName: '선택', checkboxSelection: true, headerCheckboxSelection: true, width: 50, align: 'center'},
     { headerName: '제조사', field: 'make', sortable: true, width: 150, align: 'left',  editable: true, chartype: 'string', search: true},
     { headerName: '제품', field: 'model', sortable: true, width: 250, align: 'left', chartype: 'string', search: true  },
-    { headerName: '가격', field: 'price', editable: true, width: 100, align: 'right', separator: true, chartype: 'number', search: true  }
+    { headerName: '가격', field: 'price', editable: true, width: 100, align: 'right', separator: true, chartype: 'number', search: true  },
+    { headerName: '사용여부', field: 'use', switch: true, width: 100, align: 'center'  },
+    { headerName: '사용여부1', field: 'use', switch: true, width: 100, align: 'center'  }
   ]);
 
   const [rowData, setRowData] = useState([
-    { make: 'Toyota', model: 'Celica', price: 35000 },
-    { make: 'Ford', model: 'Mondeo', price: 32000 },
-    { make: 'Porsche', model: 'Boxster', price: 72000 },
-    { make: 'Porsche', model: 'Boxster', price: 72000 },
-    { make: 'Porsche', model: 'Boxster', price: 72000 },
-    { make: 'Porsche', model: 'Boxster', price: 72000 },
-    { make: 'Porsche', model: 'Boxster', price: 72000 },
-    { make: 'Porsche', model: 'Boxster', price: 72000 },
-    { make: 'Porsche', model: 'Boxster', price: 72000 },
-    { make: 'Porsche', model: 'Boxster', price: 72000 },
-    { make: 'Porsche', model: 'Boxster', price: 72000 },
-    { make: 'Porsche', model: 'Boxster', price: 72000 },
-    { make: 'Porsche', model: 'Boxster', price: 72000 }
+    { make: 'Toyota',  model: 'Celica',  price: 35000, use: 'true' },
+    { make: 'Ford',    model: 'Mondeo',  price: 32000, use: 'true' },
+    { make: 'Porsche', model: 'Boxster', price: 72000, use: 'true' },
+    { make: 'Porsche', model: 'Boxster', price: 72000, use: 'true' },
+    { make: 'Porsche', model: 'Boxster', price: 72000, use: 'true' },
+    { make: 'Porsche', model: 'Boxster', price: 72000, use: 'true' },
+    { make: 'Porsche', model: 'Boxster', price: 72000, use: 'true' },
+    { make: 'Porsche', model: 'Boxster', price: 72000, use: 'true' },
+    { make: 'Porsche', model: 'Boxster', price: 72000, use: 'true' },
+    { make: 'Porsche', model: 'Boxster', price: 72000, use: 'true' },
+    { make: 'Porsche', model: 'Boxster', price: 72000, use: 'true' },
+    { make: 'Porsche', model: 'Boxster', price: 72000, use: 'true' },
+    { make: 'Porsche', model: 'Boxster', price: 72000, use: 'true' }
   ]);
 
-  const handleClick = (buttonType) => {
+  const [parentSwitchState, setParentSwitchState] = useState(false);
+  const [parentComboState, setParentComboState] = useState(false);
+
+  const switchClick = (newState) => {
+    setParentSwitchState(newState); // 부모 컴포넌트의 상태 업데이트
+  };
+
+  const comboClick = (newState) => {
+    setParentComboState(newState); // 부모 컴포넌트의 상태 업데이트
+  };
+
+  const buttonClick = (buttonType) => {
     console.log(`${buttonType} 버튼이 클릭되었습니다.`);
   };
 
@@ -73,25 +86,36 @@ const ItemCode = () => {
         <div className='search-condition'>
           <div>
             <h1>버튼</h1>
-            <Kbbutton type="deleteButton"  onClick={() => handleClick('삭제')}/>
-            <Kbbutton type="addButton"  onClick={() => handleClick('추가')}/>
-            <Kbbutton type="updateButton"  onClick={() => handleClick('수정')}/>
-            <Kbbutton type="searchButton" onClick={() => handleClick('검색')} />
+            <Kbbutton type="deleteButton"  onClick={() => buttonClick('삭제')}/>
+            <Kbbutton type="addButton"  onClick={() => buttonClick('추가')}/>
+            <Kbbutton type="updateButton"  onClick={() => buttonClick('수정')}/>
+            <Kbbutton type="searchButton" onClick={() => buttonClick('검색')} />
           </div>
             <h1>input</h1>
           <div className='line01'>
-            <InputDate dateProp = {today} />
-            <InputDate dateProp = {today} />
+            <KbInputDate dateProp = {today} />
+            <KbInputDate dateProp = {today} />
           </div>
           <div>
             {/* <InputDate dateProp = {today} /> */}
           </div>
           <div>
             <h1>search</h1>
-            <Test></Test>
             {/* <SearchInput itemName = {"담당자"} inputDatas = {director}></SearchInput>
             <SearchInput itemName = {"창고"} inputDatas = {director}></SearchInput> */}
           </div>
+        </div>
+        <div>
+          <h1>Switch 상태: {parentSwitchState ? 'ON' : 'OFF'}</h1>
+          <div className='grid' style={{marginLeft: '20px', padding: '0px 20px'}}>
+            <KbSwitch swStatProp = {false} onClick={switchClick}/>
+          </div>  
+        </div>
+        <div>
+          <h1>콤보</h1>
+          <div className='grid' style={{marginLeft: '20px', padding: '0px 20px'}}>
+            <KbCombo comboDataProp = {director} comboWidthProp = {150} comboHeightProp = {24} onClick={comboClick}/>
+          </div>  
         </div>
         <h1>Grid1</h1>
         <div className='grid' style={{marginLeft: '20px', padding: '0px 20px'}}>

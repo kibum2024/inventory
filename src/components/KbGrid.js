@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Kbbutton from './KbButton';
 import KbPagination from './KbPagination';
+import KbSwitch from './KbSwitch';
 import { KbGridConfig } from './KbGridConfig';
 import { IoCaretDown, IoCaretUp } from "react-icons/io5";
 import './KbGrid.css';
@@ -22,6 +23,10 @@ const KbGrid = ({ columnDefsProp, rowDataProp, rowSelectionProp, paginationProp,
   const itemsPerPage = paginationPageSizeProp; // 페이지당 항목 수
   let totalPages = null;
   let currentItems = null;
+
+  const switchClick = (newState, rowIndex, field) => {
+    handleInputChange(rowIndex, field, newState);
+  };
 
   const handleInputChange = (index, field, value) => {
     const newData = [...rowDatas];
@@ -127,9 +132,9 @@ const KbGrid = ({ columnDefsProp, rowDataProp, rowSelectionProp, paginationProp,
     const columnsWithSearch = columnDefs
       .filter(columnDef => columnDef.search)
       .map(columnDef => columnDef.field);
-  
+
     setSearchColumns(columnsWithSearch);
-  }, [columnDefs]); 
+  }, [columnDefs]);
 
   const inputSearchChange = (e) => {
     setInputSearchName(e.target.value);
@@ -146,10 +151,10 @@ const KbGrid = ({ columnDefsProp, rowDataProp, rowSelectionProp, paginationProp,
           return fieldValue && fieldValue.toString().includes(inputSearchName);
         })
       );
-  
+
       setRowDatas(filteredData);  // 필터링된 데이터로 업데이트
     }
-    setCurrentPage(1); 
+    setCurrentPage(1);
   }
 
   const InputDataEnterKey = (e) => {
@@ -170,12 +175,12 @@ const KbGrid = ({ columnDefsProp, rowDataProp, rowSelectionProp, paginationProp,
           margin: '10px 0px',
         }}
       >
-        <input  
-          type="text" 
-          className='kb-search-input' 
-          placeholder="  검색어를 입력하세요" 
-          onChange={inputSearchChange} 
-          onKeyDown={InputDataEnterKey} 
+        <input
+          type="text"
+          className='kb-search-input'
+          placeholder="  검색어를 입력하세요"
+          onChange={inputSearchChange}
+          onKeyDown={InputDataEnterKey}
           style={{
             height: config.height,
             borderRadius: config.borderRadius,
@@ -210,30 +215,30 @@ const KbGrid = ({ columnDefsProp, rowDataProp, rowSelectionProp, paginationProp,
                     onChange={handleHeaderCheckboxClick} // 전체 선택/해제
                   />
                 </div>
-              ) : ( columnDef.numbering ? 
-                  <div className="kb-header-cell-label">
-                    <span className="kb-header-cell-text">{columnDef.headerName}</span>
-                  </div>  
-                  :
-                  <div  className="kb-header-cell-label"  
-                        style={{ 
-                          display: 'flex', 
-                          justifyContent: 'center',
-                          alignItems: 'center'
-                        }}
-                  >
-                    <div className="kb-header-cell-text">{columnDef.headerName}</div>
-                    {columnSelected === columnDef.field && clickCount === 1 && (
-                      <div className="kb-icon-asc" style={{ height: config.iconHeight, lineHeight: config.iconHeight }}>
-                        &nbsp;<IoCaretUp style={{ width: config.iconWidth, height: config.iconHeight, lineHeight: config.iconHeight }}/>
-                      </div>
-                    )}
-                    {columnSelected === columnDef.field && clickCount === 2 && (
-                      <div className="kb-icon-desc" style={{ height: config.iconHeight, lineHeight: config.iconHeight }}>
-                        &nbsp;<IoCaretDown style={{ width: config.iconWidth, height: config.iconHeight, lineHeight: config.iconHeight }}/>
-                      </div>
-                    )}
-                  </div>
+              ) : (columnDef.numbering ?
+                <div className="kb-header-cell-label">
+                  <span className="kb-header-cell-text">{columnDef.headerName}</span>
+                </div>
+                :
+                <div className="kb-header-cell-label"
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}
+                >
+                  <div className="kb-header-cell-text">{columnDef.headerName}</div>
+                  {columnSelected === columnDef.field && clickCount === 1 && (
+                    <div className="kb-icon-asc" style={{ height: config.iconHeight, lineHeight: config.iconHeight }}>
+                      &nbsp;<IoCaretUp style={{ width: config.iconWidth, height: config.iconHeight, lineHeight: config.iconHeight }} />
+                    </div>
+                  )}
+                  {columnSelected === columnDef.field && clickCount === 2 && (
+                    <div className="kb-icon-desc" style={{ height: config.iconHeight, lineHeight: config.iconHeight }}>
+                      &nbsp;<IoCaretDown style={{ width: config.iconWidth, height: config.iconHeight, lineHeight: config.iconHeight }} />
+                    </div>
+                  )}
+                </div>
               )}
             </div>
           )
@@ -257,15 +262,20 @@ const KbGrid = ({ columnDefsProp, rowDataProp, rowSelectionProp, paginationProp,
                     padding: '0px 5px',
                     ...(columnDef.width ? { width: `${columnDef.width}px` } : { width: '150px' }),
                     ...(columnDef.align ? { textAlign: `${columnDef.align}` } : {}),
+                    ...(columnDef.switch ? {display: 'flex', justifyContent: 'center', alignItems: 'center'} : {})
                   }}
                 >
-                  {columnDef.checkboxSelection ? (
+                  {columnDef.checkboxSelection ? ( //체크박스
                     <div>
                       <input
                         type="checkbox"
                         checked={selectedRows.includes(actualIndex)}
                         onChange={() => rowSelectedClick(actualIndex)} // 선택할 때 체크박스와 행 클릭 연동
                       />
+                    </div>
+                  ) : columnDef.switch ? ( 
+                    <div>
+                      <KbSwitch swStatProp = {rowData.use} onClick={(newState) => switchClick(newState, actualIndex, columnDef.field)}/>
                     </div>
                   ) : columnDef.editable ? (
                     editCell && editCell.rowIndex === actualIndex && editCell.field === columnDef.field ? (
@@ -277,7 +287,7 @@ const KbGrid = ({ columnDefsProp, rowDataProp, rowSelectionProp, paginationProp,
                         autoFocus
                         style={{
                           width: `${columnDef.width || 150}px`, // 필드 크기에 맞게 조정
-                          height: '38px', // 높이를 맞추기
+                          height: config.height, // 높이를 맞추기
                           border: 'none',
                           boxSizing: 'border-box',
                         }}
@@ -313,9 +323,9 @@ const KbGrid = ({ columnDefsProp, rowDataProp, rowSelectionProp, paginationProp,
           }}
         >
           <KbPagination
-            currentPageProp = {currentPage}
-            totalPagesProp = {totalPages}
-            pageLimitProp = {5}
+            currentPageProp={currentPage}
+            totalPagesProp={totalPages}
+            pageLimitProp={5}
             onPageChange={handlePageChange}
           />
         </div>
