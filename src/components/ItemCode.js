@@ -32,45 +32,44 @@ const ItemCode = () => {
                     ];
 
   const [columnDefs] = useState([
-    // { headerName: 'No', numbering: true, align: 'center'},
-    // { headerName: '선택', checkboxSelection: true, headerCheckboxSelection: true,  align: 'center'},
-    // { headerName: '제조사', field: 'make', sortable: true,  align: 'left',  editable: true, chartype: 'string', search: true},
-    // { headerName: '제품', field: 'model', sortable: true, align: 'left', chartype: 'string', search: true  },
-    // { headerName: '가격', field: 'price', editable: true, align: 'right', separator: true, chartype: 'number', search: true  }
     { headerName: 'No', numbering: true, width: 50, align: 'center'},
     { headerName: '선택', checkboxSelection: true, headerCheckboxSelection: true, width: 50, align: 'center'},
     { headerName: '제조사', field: 'make', sortable: true, width: 150, align: 'left',  editable: true, chartype: 'string', search: true},
     { headerName: '제품', field: 'model', sortable: true, width: 250, align: 'left', chartype: 'string', search: true  },
     { headerName: '가격', field: 'price', editable: true, width: 100, align: 'right', separator: true, chartype: 'number', search: true  },
     { headerName: '사용여부', field: 'use', switch: true, width: 100, align: 'center'  },
-    { headerName: '사용여부1', field: 'use', switch: true, width: 100, align: 'center'  }
+    { headerName: '사용자', field: 'user', combo: true,  comboParams: { values: director }, width: 100, align: 'center'  }
   ]);
 
   const [rowData, setRowData] = useState([
-    { make: 'Toyota',  model: 'Celica',  price: 35000, use: 'true' },
-    { make: 'Ford',    model: 'Mondeo',  price: 32000, use: 'true' },
-    { make: 'Porsche', model: 'Boxster', price: 72000, use: 'true' },
-    { make: 'Porsche', model: 'Boxster', price: 72000, use: 'true' },
-    { make: 'Porsche', model: 'Boxster', price: 72000, use: 'true' },
-    { make: 'Porsche', model: 'Boxster', price: 72000, use: 'true' },
-    { make: 'Porsche', model: 'Boxster', price: 72000, use: 'true' },
-    { make: 'Porsche', model: 'Boxster', price: 72000, use: 'true' },
-    { make: 'Porsche', model: 'Boxster', price: 72000, use: 'true' },
-    { make: 'Porsche', model: 'Boxster', price: 72000, use: 'true' },
-    { make: 'Porsche', model: 'Boxster', price: 72000, use: 'true' },
-    { make: 'Porsche', model: 'Boxster', price: 72000, use: 'true' },
-    { make: 'Porsche', model: 'Boxster', price: 72000, use: 'true' }
+    { make: 'Toyota',  model: 'Celica',  price: 35000, use: 'true', user: '00001' },
+    { make: 'Toyota',  model: 'Celica',  price: 35000, use: 'true', user: '00002' },
+    { make: 'Toyota',  model: 'Celica',  price: 35000, use: 'true', user: '00003' },
+    { make: 'Ford',    model: 'Mondeo',  price: 32000, use: 'true', user: '00004' },
+    { make: 'Porsche', model: 'Boxster', price: 72000, use: 'true', user: '00005' },
+    { make: 'Porsche', model: 'Boxster', price: 72000, use: 'true', user: '00006' },
+    { make: 'Porsche', model: 'Boxster', price: 72000, use: 'true', user: '00007' },
+    { make: 'Porsche', model: 'Boxster', price: 72000, use: 'true', user: '00008' },
+    { make: 'Porsche', model: 'Boxster', price: 72000, use: 'true', user: '00009' },
+    { make: 'Porsche', model: 'Boxster', price: 72000, use: 'true', user: '00010' },
+    { make: 'Porsche', model: 'Boxster', price: 72000, use: 'true', user: '00011' },
+    { make: 'Porsche', model: 'Boxster', price: 72000, use: 'true', user: '00012' },
+    { make: 'Porsche', model: 'Boxster', price: 72000, use: 'true', user: '00013' },
+    { make: 'Porsche', model: 'Boxster', price: 72000, use: 'true', user: '00014' },
+    { make: 'Porsche', model: 'Boxster', price: 72000, use: 'true', user: '00015' }
   ]);
 
   const [parentSwitchState, setParentSwitchState] = useState(false);
-  const [parentComboState, setParentComboState] = useState(false);
+  const [parentComboState, setParentComboState] = useState("");
 
   const switchClick = (newState) => {
     setParentSwitchState(newState); // 부모 컴포넌트의 상태 업데이트
   };
 
   const comboClick = (newState) => {
+    // console.log("newState : ", newState);
     setParentComboState(newState); // 부모 컴포넌트의 상태 업데이트
+    
   };
 
   const buttonClick = (buttonType) => {
@@ -112,9 +111,9 @@ const ItemCode = () => {
           </div>  
         </div>
         <div>
-          <h1>콤보</h1>
+          <h1>콤보 {parentComboState.code},{parentComboState.name} </h1>
           <div className='grid' style={{marginLeft: '20px', padding: '0px 20px'}}>
-            <KbCombo comboDataProp = {director} comboWidthProp = {150} comboHeightProp = {24} onClick={comboClick}/>
+            <KbCombo comboDataProp = {director} userProp = {"00004"} comboWidthProp = {150} comboHeightProp = {24} onClick={comboClick}/>
           </div>  
         </div>
         <h1>Grid1</h1>

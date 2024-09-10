@@ -45,8 +45,8 @@ const KbInputDate = ({dateProp}) => {
     if (inputYearRef.current) {
       const inputRect = inputYearRef.current.getBoundingClientRect();
       setDropdownYearPosition({
-        top: inputRect.bottom + window.scrollY, // input 바로 아래
-        left: inputRect.left + window.scrollX, // input의 왼쪽 정렬
+        top: inputRect.bottom, // input 바로 아래
+        left: inputRect.left, // input의 왼쪽 정렬
       });
     }
   };
@@ -93,8 +93,8 @@ const KbInputDate = ({dateProp}) => {
     if (inputMonthRef.current) {
       const inputRect = inputMonthRef.current.getBoundingClientRect();
       setDropdownMonthPosition({
-        top: inputRect.bottom + window.scrollY, // input 바로 아래
-        left: inputRect.left + window.scrollX, // input의 왼쪽 정렬
+        top: inputRect.bottom, // input 바로 아래
+        left: inputRect.left // input의 왼쪽 정렬
       });
     }
   };
@@ -133,8 +133,8 @@ const KbInputDate = ({dateProp}) => {
     if (CalendarRef.current) {
       const inputRect = CalendarRef.current.getBoundingClientRect();
       setCalendarPosition({
-        top: inputRect.bottom + window.scrollY + 5, // input 바로 아래
-        left: inputRect.left + window.scrollX - 182 // input의 왼쪽 정렬
+        top: inputRect.bottom + 5, // input 바로 아래
+        left: inputRect.left - 182 // input의 왼쪽 정렬
       });
     }
   };

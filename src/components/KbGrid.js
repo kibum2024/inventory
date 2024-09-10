@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Kbbutton from './KbButton';
 import KbPagination from './KbPagination';
 import KbSwitch from './KbSwitch';
+import KbCombo from './KbCombo';
 import { KbGridConfig } from './KbGridConfig';
 import { IoCaretDown, IoCaretUp } from "react-icons/io5";
 import './KbGrid.css';
@@ -28,10 +29,15 @@ const KbGrid = ({ columnDefsProp, rowDataProp, rowSelectionProp, paginationProp,
     handleInputChange(rowIndex, field, newState);
   };
 
+  const comboClick = (newState, rowIndex, field) => {
+    handleInputChange(rowIndex, field, newState.code);
+  };
+
   const handleInputChange = (index, field, value) => {
     const newData = [...rowDatas];
     newData[index][field] = value;
     setRowDatas(newData);
+    console.log("newData : ", newData);
   };
 
   const formatNumber = (value) => {
@@ -276,6 +282,10 @@ const KbGrid = ({ columnDefsProp, rowDataProp, rowSelectionProp, paginationProp,
                   ) : columnDef.switch ? ( 
                     <div>
                       <KbSwitch swStatProp = {rowData.use} onClick={(newState) => switchClick(newState, actualIndex, columnDef.field)}/>
+                    </div>
+                  ) : columnDef.combo ? ( 
+                    <div>
+                      <KbCombo comboDataProp = {columnDef.comboParams.values} userProp = {rowData.user} comboWidthProp = {columnDef.width} comboHeightProp = {20} onClick={(newState) => comboClick(newState, actualIndex, columnDef.field)}/>
                     </div>
                   ) : columnDef.editable ? (
                     editCell && editCell.rowIndex === actualIndex && editCell.field === columnDef.field ? (

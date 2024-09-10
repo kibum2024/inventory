@@ -1,21 +1,24 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { IoChevronDown } from "react-icons/io5";
 
-const KbCombo = ({ comboDataProp, comboWidthProp, comboHeightProp, onClick }) => {
-  const [selectedData, setSelectedData] = useState(null); 
+const KbCombo = ({ comboDataProp, userProp, comboWidthProp, comboHeightProp, onClick }) => {
+  const [selectedData, setSelectedData] = useState(comboDataProp.find(item => item.code === userProp)?.name); 
   const [isDataDropdownVisible, setIsDataDropdownVisible] = useState(false); 
   const [dropdownDataPosition, setDropdownDataPosition] = useState({ top: 0, left: 0 });
   const inputDataRef = useRef(null); 
   const dropdownDataRef = useRef(null); 
 
-
   const InputDataChange = (e) => {
     setSelectedData(e.target.value);
   };
 
-  const selectDataChange = (name) => {
-    setSelectedData(name);
-    setIsDataDropdownVisible(false); // 선택 후 드롭다운 숨기기
+  const selectDataChange = (comboData) => {
+    setSelectedData(comboData.name);
+    setIsDataDropdownVisible(false); 
+
+    if (onClick) {
+      onClick(comboData);
+    }
   };
 
   const toggleDataDropdown = () => {
@@ -27,8 +30,8 @@ const KbCombo = ({ comboDataProp, comboWidthProp, comboHeightProp, onClick }) =>
     if (inputDataRef.current) {
       const inputRect = inputDataRef.current.getBoundingClientRect();
       setDropdownDataPosition({
-        top: inputRect.bottom + window.scrollY,
-        left: inputRect.left + window.scrollX, 
+        top: inputRect.bottom,
+        left: inputRect.left, 
       });
     }
   };
@@ -40,16 +43,11 @@ const KbCombo = ({ comboDataProp, comboWidthProp, comboHeightProp, onClick }) =>
     const isCurrent = dropdownRefs.some(ref => ref.current && ref.current.contains(e.target));
   
     if (isInAnyDropdown) {
-      // const target = e.target;
       const target = isCurrent.current;
       
       if (target) {
         const isScrollable = target.scrollHeight > target.clientHeight;
 
-        // console.log("target.scrollHeight : ", target.scrollHeight);
-        // console.log("target.clientHeight : ", target.clientHeight);
-      
-        
         if (isScrollable) {
           const atTop = target.scrollTop === 0;
           const atBottom = target.scrollHeight - target.scrollTop === target.clientHeight;
@@ -100,7 +98,7 @@ const KbCombo = ({ comboDataProp, comboWidthProp, comboHeightProp, onClick }) =>
           alignItems: 'center',
           width: `${comboWidthProp}px`,
           height: `${comboHeightProp}px`,
-          margin: '10px 0px',
+          margin: '2px 0px',
         }}
       >
         <input
@@ -109,7 +107,7 @@ const KbCombo = ({ comboDataProp, comboWidthProp, comboHeightProp, onClick }) =>
           value={selectedData}
           onChange={InputDataChange}
           style={{
-            width: `${comboWidthProp}px`,
+            width: `${comboWidthProp - 18}px`,
             height: `${comboHeightProp}px`,
             textAlign: 'center',
             border: '1px solid #ccc',
@@ -118,8 +116,14 @@ const KbCombo = ({ comboDataProp, comboWidthProp, comboHeightProp, onClick }) =>
         />
         <div
           onClick={toggleDataDropdown}
-          style={{ border: '1px solid #ccc', width: '18px', color: '#ccc', backgroundColor: '#fff' }}
-        ><IoChevronDown style={{ paddingTop: '4px', width: '16px', height: '16px', lineHeight: '16px' }} /></div>
+          style={{ 
+            border: '1px solid #ccc', 
+            width: '18px', 
+            height: `${comboHeightProp}px`,
+            color: '#ccc', 
+            backgroundColor: '#fff' 
+          }}
+        ><IoChevronDown style={{ paddingTop: '2px', width: '16px', height: '16px', lineHeight: '16px' }} /></div>
       </div>
 
       {/* 콤보버튼 클릭       */}
@@ -140,7 +144,7 @@ const KbCombo = ({ comboDataProp, comboWidthProp, comboHeightProp, onClick }) =>
               position: 'absolute',
               top: `${dropdownDataPosition.top}px`, 
               left: `${dropdownDataPosition.left}px`,
-              width: `${comboWidthProp + 18}px`,
+              width: `${comboWidthProp}px`,
               maxHeight: '180px',
               overflowY: 'auto',
               border: '1px solid #ccc',
@@ -155,11 +159,12 @@ const KbCombo = ({ comboDataProp, comboWidthProp, comboHeightProp, onClick }) =>
             {comboDataProp.map((comboData, index) => (
               <li
                 key={index}
-                onClick={() => selectDataChange(comboData.name)}
+                onClick={() => selectDataChange(comboData)}
                 style={{
                   fontSize: '14px', 
                   textAlign: 'center',
                   height: '18px',
+                  lineHeight: '18px',
                   cursor: 'pointer',
                   backgroundColor: selectedData === comboData.name ? '#e6f7ff' : 'white'
                 }}
