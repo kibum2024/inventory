@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IoAddCircleOutline, IoRemoveCircleOutline, IoPencil, IoSearch } from 'react-icons/io5';
+import { IoAddCircleOutline, IoRemoveCircleOutline, IoPencil, IoSearch, IoCloseCircleOutline } from 'react-icons/io5';
 import { KbButtonConfig } from './KbButtonConfig';
 
 const Kbbutton = ({ type, onClick }) => {
@@ -10,7 +10,8 @@ const Kbbutton = ({ type, onClick }) => {
     IoRemoveCircleOutline: IoRemoveCircleOutline,
     IoAddCircleOutline: IoAddCircleOutline,
     IoPencil: IoPencil,
-    IoSearch: IoSearch
+    IoSearch: IoSearch,
+    IoCloseCircleOutline: IoCloseCircleOutline
   };
 
   const IconComponent = iconMap[config.icon];

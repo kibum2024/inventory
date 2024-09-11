@@ -1,6 +1,6 @@
 import React from 'react';
 // import { Routes, Route, Link, Navigate, useNavigate, useLocation } from 'react-router-dom';
-import ItemCode from './components/ItemCode';
+import ItemCode from './components/kbcomponents/ItemCode';
 // import DateInput from './components/DateInput';
 import './App.css';
 
@@ -10,7 +10,7 @@ function App() {
     <div className='app-wrap'>
       <div className='header-main-wrap'>
         {/* <DateInput></DateInput> */}
-        <ItemCode></ItemCode>
+        <ItemCode/>
       </div>
       <div className='container-main-wrap'>
           {/* <Routes> */}

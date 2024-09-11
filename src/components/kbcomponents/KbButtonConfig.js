@@ -63,4 +63,20 @@ export const KbButtonConfig = {
       backgroundColor: '#666666',
     },
   },
+  closeButton: {
+    text: '닫기',
+    color: '#666666',
+    width: '80px',
+    height: '25px',
+    iconWidth: '16px',
+    iconHeight: '16px',
+    backgroundColor: 'white',
+    border: '1px solid rgb(204, 204, 204)',
+    borderRadius: '6px',
+    icon: 'IoCloseCircleOutline',
+    hover: {
+      color: 'white',
+      backgroundColor: '#666666',
+    },
+  },
 };

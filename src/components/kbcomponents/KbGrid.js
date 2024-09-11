@@ -3,10 +3,10 @@ import Kbbutton from './KbButton';
 import KbPagination from './KbPagination';
 import KbSwitch from './KbSwitch';
 import KbCombo from './KbCombo';
+import KbSearchButton from './KbSearchButton';
 import { KbGridConfig } from './KbGridConfig';
 import { IoCaretDown, IoCaretUp } from "react-icons/io5";
 import './KbGrid.css';
-
 
 const KbGrid = ({ columnDefsProp, rowDataProp, rowSelectionProp, paginationProp, paginationPageSizeProp }) => {
   // const config = { ...KbGridConfig };
@@ -25,8 +25,35 @@ const KbGrid = ({ columnDefsProp, rowDataProp, rowSelectionProp, paginationProp,
   let totalPages = null;
   let currentItems = null;
 
+  const formatDate = (date) => {
+    if (!date) {
+      return "";  // 날짜가 없으면 빈 문자열 반환
+    }
+  
+    // date가 숫자 형식일 때 (예: 20240916)
+    const dateStr = date.toString();  // 숫자형일 수도 있으므로 문자열로 변환
+  
+    if (dateStr.length === 8) {
+      const year = dateStr.slice(0, 4);    // 앞 4자리: 연도
+      const month = dateStr.slice(4, 6);   // 중간 2자리: 월
+      const day = dateStr.slice(6, 8);     // 마지막 2자리: 일
+  
+      return `${year}-${month}-${day}`;    // YYYY-MM-DD 형식으로 반환
+    }
+  };
+
   const switchClick = (newState, rowIndex, field) => {
     handleInputChange(rowIndex, field, newState);
+  };
+
+  const searchClick = (newState, rowIndex, field, connectField) => {
+    if (newState) {
+      if (connectField) {
+        handleInputChange(rowIndex, connectField, newState.code);
+      }
+
+      handleInputChange(rowIndex, field, newState.name);
+    }
   };
 
   const comboClick = (newState, rowIndex, field) => {
@@ -128,7 +155,10 @@ const KbGrid = ({ columnDefsProp, rowDataProp, rowSelectionProp, paginationProp,
     if (chartype === 'number') {
       const numericValue = value === '' ? 0 : Number(value);
       handleInputChange(rowIndex, field, numericValue);
-    } else {
+    } else if (chartype === 'date') {
+      handleInputChange(rowIndex, field, value);
+    } else
+    {
       handleInputChange(rowIndex, field, value);
     }
   };
@@ -283,6 +313,15 @@ const KbGrid = ({ columnDefsProp, rowDataProp, rowSelectionProp, paginationProp,
                     <div>
                       <KbSwitch swStatProp = {rowData.use} onClick={(newState) => switchClick(newState, actualIndex, columnDef.field)}/>
                     </div>
+                  ) : columnDef.searchButton ? ( 
+                    <div style={{display: 'flex', position: 'relative'}}>
+                      <div>
+                        {rowData[columnDef.field]}
+                      </div>
+                      <div style={{position: 'absolute', top: '0px', right: '0px'}}>
+                        <KbSearchButton itemProp = {columnDef.searchname} inputDatasProp = {columnDef.searchParams.values} onClick={(newState) => searchClick(newState, actualIndex, columnDef.field, columnDef.searchconnect)}/>
+                      </div>
+                    </div>
                   ) : columnDef.combo ? ( 
                     <div>
                       <KbCombo comboDataProp = {columnDef.comboParams.values} userProp = {rowData.user} comboWidthProp = {columnDef.width} comboHeightProp = {20} onClick={(newState) => comboClick(newState, actualIndex, columnDef.field)}/>
@@ -311,6 +350,9 @@ const KbGrid = ({ columnDefsProp, rowDataProp, rowSelectionProp, paginationProp,
                     )
                   ) : columnDef.numbering ? (
                     <div>{formatNumber(actualIndex + 1)}</div>
+                  ) : columnDef.chartype === 'date'? (
+                    // <div>{rowData[columnDef.field]}</div>
+                    <div>{formatDate(rowData[columnDef.field])}</div>
                   ) : columnDef.separator ? (
                     <div>{formatNumber(rowData[columnDef.field])}</div>
                   ) : (
