@@ -1,5 +1,33 @@
+
+
 .line01 {
   display: flex;
   flex-wrap: nowrap;
   gap: 15px;
+}
+
+/* 삭제 버튼 스타일 */
+.delete-button {
+  color: var(--delete-button-color);
+  width: var(--delete-button-width);
+  height: var(--delete-button-height);
+  background-color: var(--delete-button-background-color);
+  border: var(--delete-button-border);
+  border-radius: var(--delete-button-border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 아이콘 스타일 */
+.delete-button .icon {
+  width: var(--delete-button-icon-width);
+  height: var(--delete-button-icon-height);
+  margin-right: 5px;
+}
+
+/* hover 상태에서의 스타일 */
+.delete-button:hover {
+  color: var(--delete-button-hover-color);
+  background-color: var(--delete-button-hover-background-color);
 }

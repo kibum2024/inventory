@@ -170,6 +170,10 @@ const ItemCode = () => {
             paginationPageSizeProp = {6} // 페이지당 10개 행 표시
           />
         </div>
+        <div className='delete-button'>
+          <div>한글</div>
+          <div>영어</div>
+        </div>
 
         {/* <h1>Grid2</h1>
         <div className='grid'>
