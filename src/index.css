@@ -85,6 +85,7 @@ figure {
 html,
 body {
   background-color: #fff;
+  height: 100%; 
 }
 
 h1,
@@ -106,6 +107,10 @@ input {
   vertical-align: middle;
   font-family: 'NanumSquare';
   outline: none;
+  height: 25px;
+  border-radius: 6px;
+  border: 1px solid rgb(236, 239, 243);
+  padding: 0px 5px;
 }
 
 button {

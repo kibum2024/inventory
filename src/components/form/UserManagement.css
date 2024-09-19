@@ -1,0 +1,101 @@
+.user-management-wrap {
+  display: flex;
+}
+
+.user-management-left-panel {
+  width: 586px;
+  height: 510px;
+  padding: 20px;
+  margin-left: 20px;
+  border-radius: 6px;
+  border: 1px solid rgb(236, 239, 243);
+}
+
+.user-management-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.user-management-list-title {
+  font-weight: bold;
+  color: rgb(0, 56, 121);
+}
+
+.user-management-list-grid {
+  margin: 0 auto;
+}
+
+.user-management-update-wrap {
+  width: 586px;
+  height: 210px;
+  padding: 20px;
+  margin-left: 20px;
+  border-radius: 6px;
+  border: 1px solid rgb(236, 239, 243);
+}
+
+.user-management-update {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.user-management-update-button-wrap {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.user-management-update-item-wrap {
+  margin-top: 10px;
+}
+
+.user-management-update-item-wrap input {
+  width: 175px;
+}
+
+.user-management-update-item-input {
+  height: 35px;
+  line-height: 35px;
+}
+
+.user-management-input-label {
+  width: 90px;
+}
+
+.user-management-input-label.space-blank {
+  margin-left: 25px;
+}
+
+.user-management-update-name {
+  width: 476px !important;
+}
+
+.user-management-provisioning {
+  display: flex;
+}
+.user-management-title {
+  height: 40px;
+  line-height: 40px;
+  padding-left: 20px;
+  font-weight: bold;
+  color: rgb(0, 56, 121);
+}
+
+.user-management-menuCode1 {
+  width: 585px;
+  height: 220px;
+  padding: 20px;
+  margin-left: 20px;
+  border-radius: 6px;
+  border: 1px solid rgb(236, 239, 243);
+}
+
+.user-management-menuCode3 {
+    width: 375px;
+    height: 220px;
+    padding: 20px;
+    margin-left: 20px;
+    border-radius: 6px;
+    border: 1px solid rgb(236, 239, 243);
+}

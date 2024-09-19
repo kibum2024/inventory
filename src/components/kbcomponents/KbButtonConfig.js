@@ -1,3 +1,18 @@
+const defaultButtonConfig = {
+  color: '#666666',
+  width: '80px',
+  height: '25px',
+  iconWidth: '16px',
+  iconHeight: '16px',
+  backgroundColor: 'white',
+  border: '1px solid rgb(204, 204, 204)',
+  borderRadius: '6px',
+  hover: {
+    color: 'white',
+    backgroundColor: '#666666',
+  },
+};
+
 export const KbButtonConfig = {
   deleteButton: {
     text: '삭제',
@@ -9,7 +24,6 @@ export const KbButtonConfig = {
     backgroundColor: 'white',
     border: '1px solid red',
     borderRadius: '6px',
-    icon: 'IoRemoveCircleOutline',
     hover: {
       color: 'white',
       backgroundColor: 'red',
@@ -25,7 +39,21 @@ export const KbButtonConfig = {
     backgroundColor: 'white',
     border: '1px solid rgb(0, 56, 121)',
     borderRadius: '6px',
-    icon: 'IoAddCircleOutline',
+    hover: {
+      color: 'white',
+      backgroundColor: 'rgb(0, 56, 121)',
+    },
+  },
+  saveButton: {
+    text: '저장',
+    color: 'rgb(0, 56, 121)',
+    width: '80px',
+    height: '25px',
+    iconWidth: '16px',
+    iconHeight: '16px',
+    backgroundColor: 'white',
+    border: '1px solid rgb(0, 56, 121)',
+    borderRadius: '6px',
     hover: {
       color: 'white',
       backgroundColor: 'rgb(0, 56, 121)',
@@ -41,7 +69,6 @@ export const KbButtonConfig = {
     backgroundColor: 'white',
     border: '1px solid green',
     borderRadius: '6px',
-    icon: 'IoPencil',
     hover: {
       color: 'white',
       backgroundColor: 'green',
@@ -57,7 +84,6 @@ export const KbButtonConfig = {
     backgroundColor: 'white',
     border: '1px solid rgb(204, 204, 204)',
     borderRadius: '6px',
-    icon: 'IoSearch',
     hover: {
       color: 'white',
       backgroundColor: '#666666',
@@ -73,7 +99,36 @@ export const KbButtonConfig = {
     backgroundColor: 'white',
     border: '1px solid rgb(204, 204, 204)',
     borderRadius: '6px',
-    icon: 'IoCloseCircleOutline',
+    hover: {
+      color: 'white',
+      backgroundColor: '#666666',
+    },
+  },
+  closeTextButton: {
+    text: '',
+    color: '#666666',
+    width: '80px',
+    height: '25px',
+    iconWidth: '16px',
+    iconHeight: '16px',
+    backgroundColor: 'white',
+    border: '1px solid rgb(204, 204, 204)',
+    borderRadius: '6px',
+    hover: {
+      color: 'white',
+      backgroundColor: '#666666',
+    },
+  },
+  initButton: {
+    text: '',
+    color: '#666666',
+    width: '80px',
+    height: '25px',
+    iconWidth: '16px',
+    iconHeight: '25px',
+    backgroundColor: 'white',
+    border: '1px solid rgb(204, 204, 204)',
+    borderRadius: '6px',
     hover: {
       color: 'white',
       backgroundColor: '#666666',

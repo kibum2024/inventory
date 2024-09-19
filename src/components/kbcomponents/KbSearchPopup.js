@@ -107,7 +107,7 @@ const KbSearchPopup = ({ itemProp, inputDatasProp, onClick }) => {
                 onChange={searchInputChange} 
                 onKeyDown={InputDataEnterKey}
               />
-              <Kbbutton type="searchButton" onClick={() => inputSearch()} />
+              <Kbbutton typeProp="searchButton" textProp={""} onClick={() => inputSearch()} />
             </div>  
           </div>
           <div>
@@ -208,7 +208,7 @@ const KbSearchPopup = ({ itemProp, inputDatasProp, onClick }) => {
               margin: '10px 16px'
             }}
           >
-            <Kbbutton type="closeButton" onClick={() => onClick()} />
+            <Kbbutton typeProp="closeButton" textProp={""} onClick={() => onClick()} />
           </div>
         </div>
       </div>

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import * as XLSX from 'xlsx';
 import Kbbutton from './KbButton';
 import KbPagination from './KbPagination';
 import KbSwitch from './KbSwitch';
@@ -8,8 +9,7 @@ import { KbGridConfig } from './KbGridConfig';
 import { IoCaretDown, IoCaretUp } from "react-icons/io5";
 import './KbGrid.css';
 
-const KbGrid = ({ columnDefsProp, rowDataProp, rowSelectionProp, paginationProp, paginationPageSizeProp }) => {
-  // const config = { ...KbGridConfig };
+const KbGrid = ({ columnDefsProp, rowDataProp, rowSelectionProp, paginationProp, paginationPageSizeProp, checkedCountProp, searchProp, excellProp, curdProp, insertComponentProp: InsertComponent, updateComponentProp: UpdateComponent }) => {
   const config = KbGridConfig;
   const [columnDefs] = useState(columnDefsProp);
   const [rowDatas, setRowDatas] = useState(rowDataProp);
@@ -21,23 +21,54 @@ const KbGrid = ({ columnDefsProp, rowDataProp, rowSelectionProp, paginationProp,
   const [editCell, setEditCell] = useState(null); // 수정 중인 셀 정보
   const [inputSearchName, setInputSearchName] = useState('');
   const [searchColumns, setSearchColumns] = useState([]);
+  const [showInsertComponent, setShowInsertComponent] = useState(false);
+  const [showUpdateComponent, setShowUpdateComponent] = useState(false);
+  const [rowToEdit, setRowToEdit] = useState(null); // 수정할 행 정보
   const itemsPerPage = paginationPageSizeProp; // 페이지당 항목 수
+  const fileInputRef = useRef(null);
   let totalPages = null;
   let currentItems = null;
+
+  // 인라인 스타일 객체
+  const modalStyles = {
+    modal: {
+      position: 'fixed',
+      zIndex: 1000,
+      left: 0,
+      top: 0,
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)', // 반투명 배경
+    },
+    modalContent: {
+      backgroundColor: '#fff',
+      padding: '20px',
+      borderRadius: '10px',
+      width: '500px',
+      boxShadow: '0px 0px 15px rgba(0, 0, 0, 0.2)',
+    },
+    closeButton: {
+      marginTop: '10px',
+      cursor: 'pointer',
+    }
+  };
 
   const formatDate = (date) => {
     if (!date) {
       return "";  // 날짜가 없으면 빈 문자열 반환
     }
-  
+
     // date가 숫자 형식일 때 (예: 20240916)
     const dateStr = date.toString();  // 숫자형일 수도 있으므로 문자열로 변환
-  
+
     if (dateStr.length === 8) {
       const year = dateStr.slice(0, 4);    // 앞 4자리: 연도
       const month = dateStr.slice(4, 6);   // 중간 2자리: 월
       const day = dateStr.slice(6, 8);     // 마지막 2자리: 일
-  
+
       return `${year}-${month}-${day}`;    // YYYY-MM-DD 형식으로 반환
     }
   };
@@ -64,7 +95,6 @@ const KbGrid = ({ columnDefsProp, rowDataProp, rowSelectionProp, paginationProp,
     const newData = [...rowDatas];
     newData[index][field] = value;
     setRowDatas(newData);
-    console.log("newData : ", newData);
   };
 
   const formatNumber = (value) => {
@@ -157,8 +187,7 @@ const KbGrid = ({ columnDefsProp, rowDataProp, rowSelectionProp, paginationProp,
       handleInputChange(rowIndex, field, numericValue);
     } else if (chartype === 'date') {
       handleInputChange(rowIndex, field, value);
-    } else
-    {
+    } else {
       handleInputChange(rowIndex, field, value);
     }
   };
@@ -191,6 +220,7 @@ const KbGrid = ({ columnDefsProp, rowDataProp, rowSelectionProp, paginationProp,
       setRowDatas(filteredData);  // 필터링된 데이터로 업데이트
     }
     setCurrentPage(1);
+    setSelectedRows([]);
   }
 
   const InputDataEnterKey = (e) => {
@@ -199,31 +229,308 @@ const KbGrid = ({ columnDefsProp, rowDataProp, rowSelectionProp, paginationProp,
     }
   }
 
+  const buttonClick = (buttonType) => {
+    if (buttonType === "추가") {
+      handleInsertComponent(); // InsertComponent 표시
+    } else if (buttonType === "수정") {
+      if (selectedRows.length === 1) {
+        handleUpdateComponent(selectedRows[0]); // 선택된 행을 수정
+      } else {
+        alert('수정할 행을 하나만 선택하세요.');
+      }
+    } else if (buttonType === "삭제") {
+      if (selectedRows.length > 0) {
+        handleDeleteRow(); // 선택된 행 삭제
+      } else {
+        alert('삭제할 행을 선택하세요.');
+      }
+    }
+  };
+
+  // 행 삭제 로직
+  const handleDeleteRow = () => {
+    const updatedRows = rowDatas.filter((_, index) => !selectedRows.includes(index));
+    setRowDatas(updatedRows);
+    setSelectedRows([]); // 선택 행 초기화
+  };
+
+  const handleInsertComponent = () => {
+    setShowInsertComponent(true); // InsertComponent 표시
+  };
+
+  const handleUpdateComponent = (rowIndex) => {
+    setRowToEdit(rowDatas[rowIndex]); // 수정할 행 데이터 설정
+    setShowUpdateComponent(true); // UpdateComponent 표시
+  };
+
+  // 엑셀 파일 다운로드
+  const handleDownloadExcel = () => {
+    const worksheetData = rowDatas.map((rowData) => {
+      const row = {};
+      columnDefsProp.forEach((colDef) => {
+        row[colDef.headerName] = rowData[colDef.field];
+      });
+      return row;
+    });
+
+    const worksheet = XLSX.utils.json_to_sheet(worksheetData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    XLSX.writeFile(workbook, 'GridData.xlsx');
+  };
+
+  // 엑셀 파일 업로드 핸들러
+  const handleUploadExcel = (event) => {
+    const file = event.target.files[0];  // 파일 선택
+
+    if (!file) {
+      return; // 파일이 없으면 함수 종료
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+
+      // 첫 번째 시트에서 데이터 읽기
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+
+      // 엑셀 데이터를 JSON으로 변환 (header: 첫 번째 행을 필드로 사용)
+      const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 2 });
+
+      // 각 열의 필드 이름과 매핑하여 데이터를 처리
+      const processedData = jsonData.map((row) => {
+        const newRow = {};
+        columnDefsProp.forEach((colDef) => {
+          // 엑셀 파일의 필드와 그리드의 필드를 매핑
+          if (row[colDef.headerName] !== undefined) {
+            newRow[colDef.field] = row[colDef.headerName];  // 필드에 맞는 값을 저장
+          }
+        });
+        return newRow;
+      });
+
+      // 그리드 데이터를 업데이트
+      console.log("processedData : ", processedData);
+      setRowDatas(processedData);
+    };
+
+    reader.readAsArrayBuffer(file);
+  };
+
+  // 버튼 클릭 시 파일 선택 창을 열기
+  const handleButtonClick = () => {
+    fileInputRef.current.click();  // 숨겨진 input 요소 클릭 트리거
+  };
+
+  // 엑셀 파일 다운로드 핸들러
+  const handleDownloadExcelTemplate = () => {
+    // headerName과 field를 담은 배열 생성
+    const headers = columnDefs.map(colDef => ({
+      headerName: colDef.headerName,
+      field: colDef.field || '',
+    }));
+
+    // 워크시트 데이터 설정 (첫 번째 행: headerName, 두 번째 행: field)
+    const worksheetData = [
+      headers.map(col => col.headerName),
+      // headers.map(col => col.field)        
+    ];
+
+    // 워크시트 생성
+    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+    const workbook = XLSX.utils.book_new();
+
+    // 워크북에 워크시트 추가
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Template');
+
+    // 엑셀 파일로 다운로드
+    XLSX.writeFile(workbook, 'GridTemplate.xlsx');
+  };
+
   return (
     <div>
-      <div className="kb-search-content"
+      <div
         style={{
           display: 'flex',
-          justifyContent: 'center',
+          justifyContent: 'space-between',
           alignItems: 'center',
           width: `${totalWidth}px`,
-          height: config.height,
-          margin: '10px 0px',
         }}
       >
-        <input
-          type="text"
-          className='kb-search-input'
-          placeholder="  검색어를 입력하세요"
-          onChange={inputSearchChange}
-          onKeyDown={InputDataEnterKey}
+        <div
           style={{
+            display: 'flex',
+            justifyContent: 'left',
+            alignItems: 'center',
             height: config.height,
-            borderRadius: config.borderRadius,
+            gap: '5px',
+            marginBottom: '5px',
           }}
-        />
-        <Kbbutton type="searchButton" onClick={() => inputSearch()} />
+        >
+          {excellProp === "1" ? (
+            <Kbbutton textProp={"다운로드"} iconProp={"엑셀"} onClick={() => handleDownloadExcel()} />
+          ) : (
+            excellProp === "2" ? (
+              <>
+                <Kbbutton textProp={"다운로드"} iconProp={"엑셀"} onClick={() => handleDownloadExcel()} />
+                <Kbbutton textProp={"업로드"} iconProp={"엑셀"} onClick={() => handleButtonClick()} />
+              </>
+            ) : (
+              excellProp === "3" ? (
+                <>
+                  <Kbbutton textProp={"다운로드"} iconProp={"엑셀"} onClick={() => handleDownloadExcel()} />
+                  <Kbbutton textProp={"양식받기"} iconProp={"엑셀"} onClick={() => handleDownloadExcelTemplate()} />
+                  <Kbbutton textProp={"업로드"} iconProp={"엑셀"} onClick={() => handleButtonClick()} />
+                </>
+              ) : (
+                excellProp === "4" ? (
+                  <>
+                    <Kbbutton textProp={"양식받기"} iconProp={"엑셀"} onClick={() => handleDownloadExcelTemplate()} />
+                    <Kbbutton textProp={"업로드"} iconProp={"엑셀"} onClick={() => handleButtonClick()} />
+                  </>
+                ) : (
+                  <></>
+                )  
+              )
+            )
+          )
+          }
+          <input
+            type="file"
+            accept=".xlsx, .xls"
+            ref={fileInputRef}
+            style={{ display: 'none' }}  // 화면에 보이지 않도록 숨김
+            onChange={handleUploadExcel}  // 파일 선택 시 업로드 처리
+          />
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'left',
+            alignItems: 'center',
+            height: config.height,
+            gap: '5px',
+            marginBottom: '5px',
+          }}
+        >
+          {curdProp === "1" ? (
+            <Kbbutton textProp={"등록"} iconProp={"추가"} onClick={() => buttonClick('추가')} />
+          ) : (
+            curdProp === "2" ? (
+              <>
+                <Kbbutton textProp={"수정"} iconProp={"수정"} onClick={() => buttonClick('수정')} />
+              </>
+            ) : (
+              curdProp === "3" ? (
+                <>
+                  <Kbbutton textProp={"삭제"} iconProp={"삭제"} onClick={() => buttonClick('삭제')} />
+                </>
+              ) : (
+                curdProp === "4" ? (
+                  <>
+                    <Kbbutton textProp={"등록"} iconProp={"추가"} onClick={() => buttonClick('추가')} />
+                    <Kbbutton textProp={"수정"} iconProp={"수정"} onClick={() => buttonClick('수정')} />
+                  </>
+                ) : (
+                  curdProp === "5" ? (
+                    <>
+                      <Kbbutton textProp={"등록"} iconProp={"추가"} onClick={() => buttonClick('추가')} />
+                      <Kbbutton textProp={"수정"} iconProp={"수정"} onClick={() => buttonClick('수정')} />
+                      <Kbbutton textProp={"삭제"} iconProp={"삭제"} onClick={() => buttonClick('삭제')} />
+                    </>
+                  ) : (
+                    curdProp === "6" ? (
+                      <>
+                        <Kbbutton textProp={"등록"} iconProp={"추가"} onClick={() => buttonClick('추가')} />
+                        <Kbbutton textProp={"삭제"} iconProp={"삭제"} onClick={() => buttonClick('삭제')} />
+                      </>
+                    ) : (
+                      curdProp === "7" ? (
+                        <>
+                          <Kbbutton textProp={"수정"} iconProp={"수정"} onClick={() => buttonClick('수정')} />
+                          <Kbbutton textProp={"삭제"} iconProp={"삭제"} onClick={() => buttonClick('삭제')} />
+                        </>
+                      ) : (
+                        <></>
+                      )  
+                    )
+                  )
+                )
+              )
+            )
+          )
+          }
+          <input
+            type="file"
+            accept=".xlsx, .xls"
+            ref={fileInputRef}
+            style={{ display: 'none' }}  // 화면에 보이지 않도록 숨김
+            onChange={handleUploadExcel}  // 파일 선택 시 업로드 처리
+          />
+        </div>  
       </div>
+      {searchProp && (
+        <div className="kb-search-content"
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: `${totalWidth}px`,
+            height: config.height,
+            margin: '10px 0px',
+          }}
+        >
+          <input
+            type="text"
+            className='kb-search-input'
+            placeholder="  검색어를 입력하세요"
+            onChange={inputSearchChange}
+            onKeyDown={InputDataEnterKey}
+            style={{
+              height: config.height,
+              borderRadius: config.borderRadius,
+            }}
+          />
+          <Kbbutton textProp={"조회"} iconProp={"검색"} onClick={() => inputSearch()} />
+        </div>
+      )}
+      <div
+        style={{
+          height: config.height,
+          lineHeight: config.height,
+          color: 'rgb(0, 56, 121)',
+          fontWeight: 'bold',
+          marginLeft: '5px',
+        }}
+      >
+        <span>전체:{rowDatas.length}개&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        {checkedCountProp && (
+          <span>선택: {selectedRows.length}개</span>
+        )}
+      </div>
+
+      {/* InsertComponent 팝업 */}
+      {showInsertComponent && (
+        <div style={modalStyles.modal}>
+          <div style={modalStyles.modalContent}>
+            <InsertComponent onClose={() => setShowInsertComponent(false)} />
+            <button style={modalStyles.closeButton} onClick={() => setShowInsertComponent(false)}>닫기</button>
+          </div>
+        </div>
+      )}
+
+      {/* UpdateComponent 팝업 */}
+      {showUpdateComponent && rowToEdit && (
+        <div style={modalStyles.modal}>
+          <div style={modalStyles.modalContent}>
+            <UpdateComponent rowData={rowToEdit} onClose={() => setShowUpdateComponent(false)} />
+            <button style={modalStyles.closeButton} onClick={() => setShowUpdateComponent(false)}>닫기</button>
+          </div>
+        </div>
+      )}
+
       <div style={{ display: 'flex', width: `${totalWidth}px`, height: config.height, lineHeight: config.height }}>
         {columnDefs.map((columnDef, index) => {
           return (
@@ -298,7 +605,9 @@ const KbGrid = ({ columnDefsProp, rowDataProp, rowSelectionProp, paginationProp,
                     padding: '0px 5px',
                     ...(columnDef.width ? { width: `${columnDef.width}px` } : { width: '150px' }),
                     ...(columnDef.align ? { textAlign: `${columnDef.align}` } : {}),
-                    ...(columnDef.switch ? {display: 'flex', justifyContent: 'center', alignItems: 'center'} : {})
+                    ...(columnDef.switch ? { display: 'flex', justifyContent: 'center', alignItems: 'center' } : {}),
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
                   }}
                 >
                   {columnDef.checkboxSelection ? ( //체크박스
@@ -309,22 +618,27 @@ const KbGrid = ({ columnDefsProp, rowDataProp, rowSelectionProp, paginationProp,
                         onChange={() => rowSelectedClick(actualIndex)} // 선택할 때 체크박스와 행 클릭 연동
                       />
                     </div>
-                  ) : columnDef.switch ? ( 
+                  ) : columnDef.switch && columnDef.editable ? (
                     <div>
-                      <KbSwitch swStatProp = {rowData.use} onClick={(newState) => switchClick(newState, actualIndex, columnDef.field)}/>
+                      <KbSwitch swStatProp={rowData.use} onClick={(newState) => switchClick(newState, actualIndex, columnDef.field)} />
                     </div>
-                  ) : columnDef.searchButton ? ( 
-                    <div style={{display: 'flex', position: 'relative'}}>
+                  ) : columnDef.switch ? (
+                    <div style={{ pointerEvents: 'none' }}>
+                      {console.log("columnDef.editable : ", columnDef.editable)}
+                      <KbSwitch swStatProp={rowData.use} />
+                    </div>
+                  ) : columnDef.searchButton ? (
+                    <div style={{ display: 'flex', position: 'relative' }}>
                       <div>
                         {rowData[columnDef.field]}
                       </div>
-                      <div style={{position: 'absolute', top: '0px', right: '0px'}}>
-                        <KbSearchButton itemProp = {columnDef.searchname} inputDatasProp = {columnDef.searchParams.values} onClick={(newState) => searchClick(newState, actualIndex, columnDef.field, columnDef.searchconnect)}/>
+                      <div style={{ position: 'absolute', top: '0px', right: '0px' }}>
+                        <KbSearchButton itemProp={columnDef.searchname} inputDatasProp={columnDef.searchParams.values} onClick={(newState) => searchClick(newState, actualIndex, columnDef.field, columnDef.searchconnect)} />
                       </div>
                     </div>
-                  ) : columnDef.combo ? ( 
+                  ) : columnDef.combo ? (
                     <div>
-                      <KbCombo comboDataProp = {columnDef.comboParams.values} userProp = {rowData.user} comboWidthProp = {columnDef.width} comboHeightProp = {20} onClick={(newState) => comboClick(newState, actualIndex, columnDef.field)}/>
+                      <KbCombo comboDataProp={columnDef.comboParams.values} userProp={rowData.user} comboWidthProp={columnDef.width} comboHeightProp={20} onClick={(newState) => comboClick(newState, actualIndex, columnDef.field)} />
                     </div>
                   ) : columnDef.editable ? (
                     editCell && editCell.rowIndex === actualIndex && editCell.field === columnDef.field ? (
@@ -350,7 +664,7 @@ const KbGrid = ({ columnDefsProp, rowDataProp, rowSelectionProp, paginationProp,
                     )
                   ) : columnDef.numbering ? (
                     <div>{formatNumber(actualIndex + 1)}</div>
-                  ) : columnDef.chartype === 'date'? (
+                  ) : columnDef.chartype === 'date' ? (
                     // <div>{rowData[columnDef.field]}</div>
                     <div>{formatDate(rowData[columnDef.field])}</div>
                   ) : columnDef.separator ? (

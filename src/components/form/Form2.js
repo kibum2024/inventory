@@ -1,15 +1,15 @@
 import React from 'react';
 import KbButton from '../kbcomponents/KbButton';
 
-const Form1 = ({ formData, setFormData }) => {
+const Form2 = ({ formData, setFormData }) => {
   const buttonClick = (buttonType) => {
     console.log(`${buttonType} 버튼이 클릭되었습니다.`);
   };
 
-  // const handleInputChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setFormData({ ...formData, [name]: value });
-  // };
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
   return (
     <div>
@@ -29,8 +29,8 @@ const Form1 = ({ formData, setFormData }) => {
           <input
             type="text"
             name="assetName"
-            // value={formData.assetName || ''}
-            // onChange={handleInputChange}
+            value={formData.assetName || ''}
+            onChange={handleInputChange}
           />
         </div>
         <div>
@@ -38,8 +38,8 @@ const Form1 = ({ formData, setFormData }) => {
           <input
             type="text"
             name="acquisitionAmount"
-            // value={formData.acquisitionAmount || ''}
-            // onChange={handleInputChange}
+            value={formData.acquisitionAmount || ''}
+            onChange={handleInputChange}
           />
         </div>
       </div>
@@ -47,4 +47,4 @@ const Form1 = ({ formData, setFormData }) => {
   );
 };
 
-export default Form1;
+export default Form2;

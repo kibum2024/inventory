@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { IoChevronDown } from "react-icons/io5";
 
-const KbCombo = ({ comboDataProp, userProp, comboWidthProp, comboHeightProp, onClick }) => {
+const KbComboInButton = ({ comboDataProp, userProp, comboWidthProp, comboHeightProp, onClick }) => {
   const [selectedData, setSelectedData] = useState(comboDataProp.find(item => item.code === userProp)?.name); 
   const [isDataDropdownVisible, setIsDataDropdownVisible] = useState(false); 
   const [dropdownDataPosition, setDropdownDataPosition] = useState({ top: 0, left: 0 });
+  const [dropdownWidth, setDropdownWidth] = useState(comboWidthProp + 9);
   const inputDataRef = useRef(null); 
   const dropdownDataRef = useRef(null); 
 
@@ -33,6 +34,18 @@ const KbCombo = ({ comboDataProp, userProp, comboWidthProp, comboHeightProp, onC
         top: inputRect.bottom,
         left: inputRect.left, 
       });
+    }
+  };
+
+  const adjustDropdownWidth = () => {
+    if (dropdownDataRef.current) {
+      const dropdown = dropdownDataRef.current;
+      const isScrollable = dropdown.scrollHeight > dropdown.clientHeight;
+      if (isScrollable) {
+        setDropdownWidth(comboWidthProp + 15 - 0); // 스크롤바가 생기면 17px 줄여서 스크롤바 너비를 고려
+      } else {
+        setDropdownWidth(comboWidthProp + 15); // 스크롤바가 없으면 원래 너비
+      }
     }
   };
 
@@ -65,14 +78,15 @@ const KbCombo = ({ comboDataProp, userProp, comboWidthProp, comboHeightProp, onC
       }
     }  
   };
-  
+
   // 드롭다운이 열릴 때와 닫힐 때 스크롤 이벤트 제어
   useEffect(() => {
     if (isDataDropdownVisible) {
       // 드롭다운이 보일 때 스크롤 방지
       document.addEventListener('wheel', preventScroll, { passive: false });
       document.addEventListener('touchmove', preventScroll, { passive: false });
-
+      
+      adjustDropdownWidth(); // 드롭다운이 보일 때 스크롤바 여부에 따라 너비 조정
       document.body.style.overflow = 'hidden';
     } else {
       // 드롭다운이 보이지 않을 때 스크롤 방지 해제
@@ -96,6 +110,7 @@ const KbCombo = ({ comboDataProp, userProp, comboWidthProp, comboHeightProp, onC
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
+          position: 'relative',
           width: `${comboWidthProp}px`,
           height: `${comboHeightProp}px`,
           margin: '2px 0px',
@@ -107,24 +122,27 @@ const KbCombo = ({ comboDataProp, userProp, comboWidthProp, comboHeightProp, onC
           value={selectedData}
           onChange={InputDataChange}
           style={{
-            width: `${comboWidthProp - 18}px`,
+            width: `${comboWidthProp}px`,
             height: `${comboHeightProp}px`,
-            textAlign: 'center',
+            textAlign: 'left',
             border: '1px solid #ccc',
-            fontSize: '14px'
+            paddingLeft: '10px',
           }}
         />
         <div
           onClick={toggleDataDropdown}
           style={{ 
-            border: '1px solid #ccc', 
+            position: 'absolute',
+            top: '0px',
+            right: '-5px',
+            border: 'none', 
             width: '18px', 
             height: `${comboHeightProp}px`,
             color: '#ccc', 
             backgroundColor: '#fff',
-            borderRadius: '4px', 
+            borderRadius: '0px 6px 6px 0px', 
           }}
-        ><IoChevronDown size={16} style={{ paddingTop: '3px' }} /></div>
+        ><IoChevronDown size={16} style={{ paddingTop: '4px' }} /></div>
       </div>
 
       {/* 콤보버튼 클릭       */}
@@ -145,7 +163,7 @@ const KbCombo = ({ comboDataProp, userProp, comboWidthProp, comboHeightProp, onC
               position: 'absolute',
               top: `${dropdownDataPosition.top}px`, 
               left: `${dropdownDataPosition.left}px`,
-              width: `${comboWidthProp}px`,
+              width: `${dropdownWidth}px`, // 스크롤 여부에 따라 width 조정
               maxHeight: '180px',
               overflowY: 'auto',
               border: '1px solid #ccc',
@@ -153,6 +171,7 @@ const KbCombo = ({ comboDataProp, userProp, comboWidthProp, comboHeightProp, onC
               zIndex: 1,
               padding: 0,
               listStyle: 'none',
+              borderRadius: '6px', 
               margin: 0
             }}
             ref={dropdownDataRef}
@@ -162,11 +181,11 @@ const KbCombo = ({ comboDataProp, userProp, comboWidthProp, comboHeightProp, onC
                 key={index}
                 onClick={() => selectDataChange(comboData)}
                 style={{
-                  fontSize: '14px', 
-                  textAlign: 'center',
+                  textAlign: 'left',
                   height: '18px',
                   lineHeight: '18px',
                   cursor: 'pointer',
+                  paddingLeft: '10px',
                   backgroundColor: selectedData === comboData.name ? '#e6f7ff' : 'white'
                 }}
               >
@@ -180,4 +199,4 @@ const KbCombo = ({ comboDataProp, userProp, comboWidthProp, comboHeightProp, onC
   );
 }
 
-export default KbCombo;
+export default KbComboInButton;

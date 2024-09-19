@@ -1,22 +1,37 @@
-import React from 'react';
+import React, { useRef } from 'react';
 // import { Routes, Route, Link, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import ItemCode from './components/kbcomponents/ItemCode';
 // import DateInput from './components/DateInput';
 import './App.css';
+import KbSideMenu from './KbSideMenu';
 
 function App() {
+
+  const tabsRef = useRef(null);
+
+  // Menu에서 클릭할 때 Tabs에 탭을 추가하는 함수
+  const addTabToTabs = (tabName) => {
+    if (tabsRef.current) {
+      tabsRef.current.addTab(tabName);
+    }
+  };
 
   return (
     <div className='app-wrap'>
       <div className='header-main-wrap'>
-        {/* <DateInput></DateInput> */}
         <ItemCode/>
       </div>
       <div className='container-main-wrap'>
-          {/* <Routes> */}
-            {/* <Route path="/" element={<Navigate to="/content/home" />} ></Route>
+        <div className="App" style={{display: 'flex'}}>
+          <div style={{width: '200px'}}>
+            {/* <KbMenu addTab={addTabToTabs} /> */}
+            {/* <KbSideMenu /> */}
+          </div>
+        </div>
+        {/* <Routes> */}
+        {/* <Route path="/" element={<Navigate to="/content/home" />} ></Route>
             <Route path="/users/login" element={<Login />} ></Route>  */}
-            {/* <Route path="/home" element={<MainContent />} ></Route> 
+        {/* <Route path="/home" element={<MainContent />} ></Route> 
             <Route path="/brandstory" element={<BrandStory stateProp ={true}/>} >
               <Route path="story" element={<Story />} />
               <Route path="contact" element={<Contact />} />
@@ -30,7 +45,7 @@ function App() {
               <Route path="contact" element={<Contact />} />
             </Route>
             <Route path="/item-order" element={<ItemOrder  itemNoProp={selectedItemNo} />} /> */}
-          {/* </Routes> */}
+        {/* </Routes> */}
       </div>
       <div className='footer-main-wrap'>
         {/* <FooterMain></FooterMain>        */}

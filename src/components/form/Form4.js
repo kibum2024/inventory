@@ -1,20 +1,19 @@
 import React from 'react';
 import KbButton from '../kbcomponents/KbButton';
 
-const Form1 = ({ formData, setFormData }) => {
+const Form4 = () => {
   const buttonClick = (buttonType) => {
     console.log(`${buttonType} 버튼이 클릭되었습니다.`);
   };
 
-  // const handleInputChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setFormData({ ...formData, [name]: value });
-  // };
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+  };
 
   return (
     <div>
       <div>
-        <h2>고정자산 등록</h2>
+        <h2>3번째 폼 등록</h2>
         <div>X</div>
       </div>
       <div>
@@ -22,29 +21,35 @@ const Form1 = ({ formData, setFormData }) => {
           <div>취득구분</div>
           <div>
             <KbButton typeProp="deleteButton" textProp={""} onClick={() => buttonClick('삭제')} />
+            <input
+              type="text"
+              name="acquisitionType"
+              // value={formData.acquisitionType || ''}
+              onChange={handleInputChange}
+            />
           </div>
         </div>
         <div>
-          <label>자산명:</label>
+          <div>자산명</div>
           <input
             type="text"
             name="assetName"
             // value={formData.assetName || ''}
-            // onChange={handleInputChange}
+            onChange={handleInputChange}
           />
         </div>
         <div>
-          <label>취득금액:</label>
+          <div>취득금액</div>
           <input
-            type="text"
+            type="number"
             name="acquisitionAmount"
             // value={formData.acquisitionAmount || ''}
-            // onChange={handleInputChange}
+            onChange={handleInputChange}
           />
         </div>
       </div>
     </div>
   );
-};
+}
 
-export default Form1;
+export default Form4;

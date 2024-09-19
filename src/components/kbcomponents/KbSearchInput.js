@@ -252,7 +252,7 @@ const KbSearchInput = ({ itemProp, titleWidthProp, codeWidthProp, nameWidthProp,
                   onChange={searchInputChange} 
                   onKeyDown={InputDataEnterKey}
                 />
-                <Kbbutton type="searchButton" onClick={() => inputSearch()} />
+                <Kbbutton typeProp="searchButton" textProp={""} onClick={() => inputSearch()} />
               </div>  
             </div>
             <div>
@@ -353,7 +353,7 @@ const KbSearchInput = ({ itemProp, titleWidthProp, codeWidthProp, nameWidthProp,
                 margin: '10px 16px'
               }}
             >
-              <Kbbutton type="closeButton" onClick={() => togglePopup()} />
+              <Kbbutton type="closeButton" textProp={""} onClick={() => togglePopup()} />
             </div>
           </div>
         </div>

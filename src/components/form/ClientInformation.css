@@ -1,0 +1,34 @@
+.client-information {
+  width: 100%;
+}
+.client-information-search-condition {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px;
+  margin: 10px;
+  border: 1px solid #6666;
+  border-radius: 6px;
+}
+
+.client-information-search-label {
+  width: 60px;
+}
+
+.client-information-search-input {
+  width: 150px;
+  margin: 0px 10px;
+}
+
+.client-information-search-btn {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  gap: 5px;
+}
+
+.client-information-search-grid {
+  width: 100%;
+  padding: 5px;
+  margin: 10px;
+}
